@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resistor Colour Code</title>
+
+    <style>
+        body {
+            background-color: #333;
+            color: #eee;
+            font-family: sans-serif;
+
+            --black0: #000;
+            --brown1: #884400;
+            --red2: #f00;
+            --orange3: #f80;
+            --yellow4: #ff0;
+            --green5: #2c0;
+            --blue6: #06f;
+            --violet7: #c0f;
+            --gray8: #888;
+            --white9: #fff;
+        }
+
+        .Code {
+            text-align: center;
+            font-size: larger;
+        }
+
+        table#buttons tr:nth-child(1) {background-color: var(--black0);}
+        table#buttons tr:nth-child(2) {background-color: var(--brown1);}
+        table#buttons tr:nth-child(3) {background-color: var(--red2);}
+        table#buttons tr:nth-child(4) {background-color: var(--orange3);}
+        table#buttons tr:nth-child(5) {background-color: var(--yellow4);}
+        table#buttons tr:nth-child(6) {background-color: var(--green5);}
+        table#buttons tr:nth-child(7) {background-color: var(--blue6);}
+        table#buttons tr:nth-child(8) {background-color: var(--violet7);}
+        table#buttons tr:nth-child(9) {background-color: var(--gray8);}
+        table#buttons tr:nth-child(10) {background-color: var(--white9);}
+    </style>
+
+    <script>
+        let values = [0, 0, 0, 0];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            let table = document.getElementById('buttons');
+
+            for (let i=0; i<10; i++)
+            {
+                let row = document.createElement("TR");
+                
+                let e1 = document.createElement("TD");
+                e1.appendChild(createButton(0, i, String(i)));
+                row.appendChild(e1);
+
+                let e2 = document.createElement("TD");
+                e2.appendChild(createButton(1, i, String(i)));
+                row.appendChild(e2);
+
+                let e3 = document.createElement("TD");
+                e3.appendChild(createButton(2, i, ohmString(10**i)));
+                row.appendChild(e3);
+
+                let e4 = document.createElement("TD");
+                e4.appendChild(createButton(3, i, String(i)));
+                row.appendChild(e4);
+
+                table.appendChild(row);
+            }
+        });
+
+        function validate(column, value)
+        {
+
+            if (column == 0 || column == 1)
+            {
+                return 0 <= value && value < 10;
+            }
+            else if (column == 2)
+            {
+                // TODO:
+                return true;
+            }
+            else if (column == 3)
+            {
+                // TODO:
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        function setValue(column, value) {
+            console.log(column, value);
+            if(validate(column, value))
+            {
+                values[column] = value;
+                document.getElementById("value").innerText = ohmString(getValue());
+            }
+            else
+            {
+                console.error("Invalid: ", column, value);
+            }
+        }
+
+        function createButton(column, value, innerText) {
+            let ele = document.createElement("button");
+            ele.addEventListener('click', (e) => {
+                setValue(column, value);
+            });
+
+            ele.innerText = innerText;
+
+            return ele;
+        }
+
+        function ohmString(ohms)
+        {
+            if (ohms >= 1e9)
+            {
+                ohms /= 1e9;
+                return ohms + "GΩ";
+            }
+            else if(ohms >= 1e6)
+            {
+                ohms /= 1e6;
+                return ohms + "MΩ";
+            }
+            else if (ohms >= 1e3)
+            {
+                ohms /= 1e3;
+                return ohms + "kΩ";
+            }
+            else if (ohms >= 1)
+            {
+                return ohms + "Ω";
+            }
+            else {
+                ohms *= 1e3;
+                return ohms + "mΩ";
+            }
+        }
+
+        function getValue()
+        {
+            return (((values[0] * 10) + values[1]) * 10**values[2]);
+        }
+
+    </script>
+</head>
+<body>
+    <h1>4-band</h1>
+    <span class="Code" id="value"></span>
+    <hr>
+    <table id="buttons">
+
+
+    </table>
+</body>
+</html>
